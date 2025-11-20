@@ -51,7 +51,7 @@ const Button = React.forwardRef(({
 }, ref) => {
     const Comp = asChild ? Slot : "button";
 
-    // Icon size mapping based on button size
+    // Icon size mapping
     const iconSizeMap = {
         xs: 12,
         sm: 14,
@@ -61,7 +61,7 @@ const Button = React.forwardRef(({
         icon: 16,
     };
 
-    const calculatedIconSize = iconSize || iconSizeMap?.[size] || 16;
+    const calculatedIconSize = iconSize || iconSizeMap[size] || 16;
 
     // Loading spinner
     const LoadingSpinner = () => (
@@ -71,6 +71,7 @@ const Button = React.forwardRef(({
         </svg>
     );
 
+    // Render icon if available
     const renderIcon = () => {
         if (!iconName) return null;
         try {
@@ -89,6 +90,7 @@ const Button = React.forwardRef(({
         }
     };
 
+    // Fallback button if asChild fails
     const renderFallbackButton = () => (
         <button
             className={cn(
@@ -106,23 +108,24 @@ const Button = React.forwardRef(({
         </button>
     );
 
-    // When asChild is true, merge icons into the child element
+    // Handle asChild
     if (asChild) {
         try {
-            if (!children || React.Children?.count(children) !== 1) {
+            if (!children || React.Children.count(children) !== 1) {
                 return renderFallbackButton();
             }
 
-            const child = React.Children?.only(children);
+            const child = React.Children.only(children);
 
             if (!React.isValidElement(child)) {
                 return renderFallbackButton();
             }
+
             const content = (
                 <>
                     {loading && <LoadingSpinner />}
                     {iconName && iconPosition === 'left' && renderIcon()}
-                    {child?.props?.children}
+                    {child.props.children}
                     {iconName && iconPosition === 'right' && renderIcon()}
                 </>
             );
@@ -131,9 +134,9 @@ const Button = React.forwardRef(({
                 className: cn(
                     buttonVariants({ variant, size, className }),
                     fullWidth && "w-full",
-                    child?.props?.className
+                    child.props.className
                 ),
-                disabled: disabled || loading || child?.props?.disabled,
+                disabled: disabled || loading || child.props.disabled,
                 children: content,
             });
 
@@ -162,4 +165,4 @@ const Button = React.forwardRef(({
 });
 
 Button.displayName = "Button";
-export default Button;s
+export default Button;
